@@ -19,9 +19,12 @@ using System.Text;
         private static string path;
 
         static FileManager()
+
+
         {
+
             FileManager.path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "SP_MOSQUELLA_JUAN\\");
-            ValidarExistenciaDeDirectorio();
+            FileManager.ValidarExistenciaDeDirectorio();
         }
 
         private static void ValidarExistenciaDeDirectorio()

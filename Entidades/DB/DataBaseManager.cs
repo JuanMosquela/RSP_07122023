@@ -20,9 +20,10 @@ namespace Entidades.DataBase
             {
                 using (DataBaseManager.connection = new SqlConnection(DataBaseManager.stringConnection))
                 {
-                    string query = $"SELECT imagen FROM COMIDA WHERE tipo_comida = {tipo}";
+                    string query = $"SELECT imagen FROM COMIDA WHERE tipo_comida = @tipo";
                     SqlCommand command = new SqlCommand(query, connection);
-                    connection.Open();
+                    command.Parameters.AddWithValue("@tipo", tipo);
+                    connection.Open();                    
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -33,12 +34,39 @@ namespace Entidades.DataBase
             }catch (Exception ex)
             {
                 throw new ComidaInvalidaExeption("Error al obtener la imagen de la comida en la base de datos");
-            }            
+            }
+            finally
+            {
+                connection.Close();
+            }         
         }
 
-        public static bool GuardarTicket<T>(string nombreEmpleado, T comida)
+        public static bool GuardarTicket<T>(string nombreEmpleado, T comida) where T : IComestible
         {
-            return false;
+            try
+            {
+                using (DataBaseManager.connection = new SqlConnection(DataBaseManager.stringConnection))
+                {
+                    string query = $"INSERT INTO TICKET (empleado, ticket) VALUES (@empleado,@ticket)";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.CommandText = query;
+                    command.Parameters.AddWithValue("@nombreEmpleado", nombreEmpleado);
+                    command.Parameters.AddWithValue("@ticket", comida.Ticket);
+                    connection.Open();
+
+                    command.ExecuteNonQuery();
+                    connection.Close();
+
+                    return true;                    
+                }
+            }
+            catch(Exception ex)
+            {
+                throw new ComidaInvalidaExeption("dfgdgdgf");
+                
+            }
+           
         }
     }
 }

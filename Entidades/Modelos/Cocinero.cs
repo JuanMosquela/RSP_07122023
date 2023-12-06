@@ -57,13 +57,17 @@ namespace Entidades.Modelos
 
         private void IniciarIngreso()
         {
-            if (!this.cancellation.IsCancellationRequested)
+            this.tarea = Task.Run(() =>
             {
-                this.tarea = Task.Run(NotificarNuevoIngreso);
-                this.cantPedidosFinalizados++;     
-                DataBaseManager.GuardarTicket(this.Nombre, this.menu);
-                Thread.Sleep(1000);
-            }
+                while (!cancellation.IsCancellationRequested)
+                {
+                    NotificarNuevoIngreso();
+                    EsperarProximoIngreso();
+                    cantPedidosFinalizados++;
+                    DataBaseManager.GuardarTicket<T>(nombre, menu);
+
+                }
+            }, cancellation.Token);
         }
 
         private void NotificarNuevoIngreso()
@@ -72,12 +76,8 @@ namespace Entidades.Modelos
             {
                 this.menu = new T();
                 this.menu.IniciarPreparacion();
-                this.EsperarProximoIngreso();                
-            }
-            else
-            {
-                this.OnIngreso.Invoke(this.menu);
-            }           
+                OnIngreso.Invoke(menu);                            
+            }                  
         }
         private void EsperarProximoIngreso()
         {
@@ -85,14 +85,16 @@ namespace Entidades.Modelos
 
             if(this.OnDemora is not null)
             {
-                Thread.Sleep(2000);
-                this.demoraPreparacionTotal += tiempoEspera;
-            }
-            else
-            {
-                this.OnDemora.Invoke(this.demoraPreparacionTotal);
-            }          
+                while (!menu.Estado && !cancellation.IsCancellationRequested)
+                {
+                    OnDemora.Invoke(tiempoEspera);
 
+                    Thread.Sleep(1000);
+
+                    tiempoEspera += 1;
+                }
+                demoraPreparacionTotal += tiempoEspera;
+            }
         }
     }
 }
