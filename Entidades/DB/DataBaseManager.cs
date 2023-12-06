@@ -63,7 +63,7 @@ namespace Entidades.DataBase
             }
             catch(Exception ex)
             {
-                throw new ComidaInvalidaExeption("dfgdgdgf");
+                throw new ComidaInvalidaExeption("Error al guardar el ticket");
                 
             }
            

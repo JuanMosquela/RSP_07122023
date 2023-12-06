@@ -74,7 +74,7 @@ namespace FrmView
         private void FrmView_FormClosing(object sender, FormClosingEventArgs e)
         {
             //Alumno: Serializar el cocinero antes de cerrar el formulario
-            FileManager.Serializar(hamburguesero.Nombre, "file.txt");
+            FileManager.Serializar(hamburguesero, "file.txt");
 
         }
     }
