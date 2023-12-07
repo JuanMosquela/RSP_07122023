@@ -30,9 +30,7 @@ namespace Entidades.Modelos
             this.nombre = nombre;
             this.mozo = new Mozo<T>();
             this.pedidos = new Queue<T>();
-            this.mozo.OnPedido += TomarNuevoPedido;
-
-            
+            this.mozo.OnPedido += TomarNuevoPedido;            
         }
 
         public Queue<T> Pedidos { get { return pedidos; } }
