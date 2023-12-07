@@ -10,6 +10,7 @@ namespace FrmView
     {
         private Queue<IComestible> comidas;
         Cocinero<Hamburguesa> hamburguesero;
+        private IComestible comida;
 
         public FrmView()
         {
@@ -18,7 +19,7 @@ namespace FrmView
             this.hamburguesero = new Cocinero<Hamburguesa>("Ramon");
             //Alumno - agregar manejadores al cocinero
             this.hamburguesero.OnDemora += this.MostrarConteo;
-            this.hamburguesero.OnIngreso += this.MostrarComida;
+            this.hamburguesero.OnPedido += this.MostrarComida;
         }
 
         //Alumno: Realizar los cambios necesarios sobre MostrarComida de manera que se refleje
@@ -77,11 +78,11 @@ namespace FrmView
 
         private void btnSiguiente_Click(object sender, EventArgs e)
         {
-            if (this.comidas.Count > 0)
-            {
-                IComestible comida = this.comidas.Dequeue();
+            if (this.comida != null)
+            {          
                 comida.FinalizarPreparacion(this.hamburguesero.Nombre);
                 this.ActualizarAtendidos(comida);
+                comida = null;
             }
             else
             {

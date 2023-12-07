@@ -7,7 +7,7 @@ using Entidades.Interfaces;
 
 namespace Entidades.Modelos
 {  
-    public delegate void DelegadoDemoraAtencion(double demora);
+    public delegate void DelegadoDemoraAtencion (double demora);
     public delegate void DelegadoNuevoIngreso(IComestible menu);
 
     public class Cocinero<T> where T : IComestible, new ()
@@ -30,6 +30,7 @@ namespace Entidades.Modelos
             this.nombre = nombre;
             this.mozo = new Mozo<T>();
             this.pedidos = new Queue<T>();
+            this.mozo.OnPedido += TomarNuevoPedido;
 
             
         }
@@ -87,11 +88,11 @@ namespace Entidades.Modelos
 
         private void NotificarNuevoIngreso()
         {
-            if(OnIngreso != null)
+            if(OnPedido != null)
             {
                 menu = new T();
                 menu.IniciarPreparacion();
-                OnIngreso.Invoke(menu);                            
+                OnPedido.Invoke(menu);                            
             }                  
         }
         private void EsperarProximoIngreso()
