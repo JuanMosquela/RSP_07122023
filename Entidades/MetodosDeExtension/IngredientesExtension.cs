@@ -8,14 +8,14 @@ namespace Entidades.MetodosDeExtension
 
         public static double CalcularCostoIngredientes(this List<EIngrediente> ingredientes, int costoInicial)
         {
-            double resultado = costoInicial;
+            double aumento = costoInicial;
             foreach (int ingrediente in ingredientes)
             {
                 double porcentual = (ingrediente / 100) * costoInicial;
-                resultado += porcentual;
+                aumento += porcentual;
             }
 
-            return resultado;
+            return aumento;
         }
         public static List<EIngrediente> IngredientesAleatorios(this Random rand) 
         {

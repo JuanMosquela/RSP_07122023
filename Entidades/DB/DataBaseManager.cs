@@ -51,12 +51,12 @@ namespace Entidades.DataBase
                     SqlCommand command = new SqlCommand(query, connection);
                     command.CommandType = System.Data.CommandType.Text;
                     command.CommandText = query;
-                    command.Parameters.AddWithValue("@nombreEmpleado", nombreEmpleado);
+                    command.Parameters.AddWithValue("@empleado", nombreEmpleado);
                     command.Parameters.AddWithValue("@ticket", comida.Ticket);
                     connection.Open();
 
                     command.ExecuteNonQuery();
-                    connection.Close();
+                 
 
                     return true;                    
                 }
@@ -64,7 +64,11 @@ namespace Entidades.DataBase
             catch(Exception ex)
             {
                 throw new ComidaInvalidaExeption("Error al guardar el ticket");
-                
+
+            }
+            finally
+            {
+                connection.Close();
             }
            
         }

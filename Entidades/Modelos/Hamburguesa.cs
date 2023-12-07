@@ -31,7 +31,7 @@ namespace Entidades.Modelos
   
         public bool Estado { get { return this.estado; } }
 
-        public string Imagen { get { return DataBaseManager.GetImagenComida(this.imagen); } }
+        public string Imagen { get { return this.imagen; } }
 
 
         private void AgregarIngredientes()
@@ -59,9 +59,11 @@ namespace Entidades.Modelos
         public void IniciarPreparacion()
         {
             if (!this.estado)
-            {                
-                int randomNum = this.random.Next(1, 9);
-                this.imagen = $"Hamburguesa_{randomNum}";
+            {
+                Random random = new Random();
+                int randomNum = random.Next(1, 9);
+                this.imagen = DataBaseManager.GetImagenComida($"Hamburguesa_{randomNum}");
+                
                 this.AgregarIngredientes();
             }
         }

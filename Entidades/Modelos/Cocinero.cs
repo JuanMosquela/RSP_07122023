@@ -72,7 +72,7 @@ namespace Entidades.Modelos
 
         private void NotificarNuevoIngreso()
         {
-            if(this.OnIngreso is not null)
+            if(OnIngreso != null)
             {
                 this.menu = new T();
                 this.menu.IniciarPreparacion();
@@ -81,10 +81,10 @@ namespace Entidades.Modelos
         }
         private void EsperarProximoIngreso()
         {
-            int tiempoEspera = 0;
 
-            if(this.OnDemora is not null)
+            if(OnDemora != null)
             {
+                int tiempoEspera = 0;
                 while (!menu.Estado && !cancellation.IsCancellationRequested)
                 {
                     OnDemora.Invoke(tiempoEspera);

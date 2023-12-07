@@ -19,11 +19,8 @@ using System.Text;
         private static string path;
 
         static FileManager()
-
-
         {
-
-            FileManager.path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "SP_MOSQUELLA_JUAN\\");
+            FileManager.path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "SP_07122023");
             FileManager.ValidarExistenciaDeDirectorio();
         }
 
@@ -68,12 +65,13 @@ using System.Text;
 
                 string json = JsonSerializer.Serialize(elemento);
 
-                File.WriteAllText(filePath, json, Encoding.UTF8);
+                Guardar(json, nombreArchivo, false);
 
                 return true;
             }
             catch (Exception ex)
             {
+                FileManager.Guardar(ex.Message, "logs.txt", true);
                 throw new FileManagerException("Error al serializar el elemento", ex);
             }
         }

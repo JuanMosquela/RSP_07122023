@@ -34,8 +34,17 @@ namespace FrmView
         //en el fomrulario el tiempo transucurrido
         private void MostrarConteo(double tiempo)
         {
-            this.lblTiempo.Text = $"{tiempo} segundos";
-            this.lblTmp.Text = $"{this.hamburguesero.TiempoMedioDePreparacion.ToString("00.0")} segundos";
+            if (this.InvokeRequired)
+            {
+                // Si no estamos en el hilo de la interfaz de usuario principal,
+                // invocamos el método en ese hilo.
+                this.Invoke(new Action(() => MostrarConteo(tiempo)));
+            }
+            else
+            {
+                this.lblTiempo.Text = $"{tiempo} segundos";
+                this.lblTmp.Text = $"{this.hamburguesero.TiempoMedioDePreparacion.ToString("00.0")} segundos";
+            }
         }
 
         private void ActualizarAtendidos(IComestible comida)

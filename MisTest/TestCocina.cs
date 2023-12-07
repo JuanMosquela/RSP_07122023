@@ -10,16 +10,12 @@ namespace MisTest
         [TestMethod]
         [ExpectedException(typeof(FileManagerException))]
         public void AlGuardarUnArchivo_ConNombreInvalido_TengoUnaExcepcion()
-        {
-            //arrange
+        {      
 
-            //act
+            string testText = "textoGuardado";
+            string testPath = ".txt. Invalide path";
 
-            //assert
-            Assert.ThrowsException<FileManagerException>(() =>
-            {
-                throw new FileManagerException("Esto paso");
-            });
+            FileManager.Guardar(testText, testPath, false);
         }
 
         [TestMethod]
@@ -33,7 +29,7 @@ namespace MisTest
             int resultado = cocinero.CantPedidosFinalizados;
 
             //assert
-            Assert.AreEqual(0, resultado);
+            Assert.AreEqual(resultado,0);
         }
     }
 }
