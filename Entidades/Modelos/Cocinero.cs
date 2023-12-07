@@ -22,7 +22,7 @@ namespace Entidades.Modelos
         private T pedidoEnPreparacion;
         private Queue<T> pedidos;
 
-        public event DelegadoNuevoIngreso  OnIngreso;
+        public event DelegadoNuevoIngreso  OnPedido;
         public event DelegadoDemoraAtencion OnDemora;
 
         public Cocinero(string nombre)
@@ -50,11 +50,13 @@ namespace Entidades.Modelos
                 if (value && !this.HabilitarCocina)
                 {
                     this.cancellation = new CancellationTokenSource();
-                    this.IniciarIngreso();
+                    this.mozo.EmpezarATrabajar = true;
+                    this.EmpezarACocinar();
                 }
                 else
                 {
-                    this.cancellation.Cancel();                   
+                    this.cancellation.Cancel();
+                    this.mozo.EmpezarATrabajar = false;
                 }
             }
         }
@@ -64,18 +66,21 @@ namespace Entidades.Modelos
         public string Nombre { get => nombre; }
         public int CantPedidosFinalizados { get => cantPedidosFinalizados; }
 
-        private void IniciarIngreso()
+        private void EmpezarACocinar()
         {
             tarea = Task.Run(() =>
             {
                 while (!cancellation.IsCancellationRequested)
                 {
-                    NotificarNuevoIngreso();
-                    EsperarProximoIngreso();
-                    cantPedidosFinalizados++;
-                    FileManager.Guardar("ingresa", "entra.txt", true);
-                    DataBaseManager.GuardarTicket<T>(nombre, menu);
-
+                    if (pedidos.Count > 0)
+                    {
+                        pedidoEnPreparacion = pedidos.Dequeue();
+                        OnPedido?.Invoke(pedidoEnPreparacion);
+                        EsperarProximoIngreso();
+                        cantPedidosFinalizados++;
+                        FileManager.Guardar("ingresa", "entra.txt", true);
+                        DataBaseManager.GuardarTicket<T>(nombre, pedidoEnPreparacion);
+                    }
                 }
             }, cancellation.Token);
         }
@@ -104,6 +109,14 @@ namespace Entidades.Modelos
                     tiempoEspera += 1;
                 }
                 demoraPreparacionTotal += tiempoEspera;
+            }
+        }
+
+        private void TomarNuevoPedido(T pedido)
+        {
+            if (this.OnPedido != null)
+            {
+                pedidos.Enqueue(pedido);
             }
         }
     }
