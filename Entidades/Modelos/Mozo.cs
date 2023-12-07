@@ -45,32 +45,33 @@ namespace Entidades.Modelos
             }
         }
 
-        private void NotificarNuevoPedido()
-        {                     
-            if (OnPedido != null)
-            {               
-                T newMenu = new T();
-                menu.IniciarPreparacion();
-                OnPedido.Invoke(newMenu);
-            }
-        }
-
         private void TomarPedidos()
         {
-            while (!cancellation.IsCancellationRequested)
+            tarea = Task.Run(() =>
             {
-                NotificarNuevoPedido();
-                Thread.Sleep(5000);
-            
-                if (OnPedido != null)
-                {                
-                    menu = new T();
-                    OnPedido.Invoke(menu);
+                while (!cancellation.IsCancellationRequested)
+                {
+                    NotificarNuevoPedido();
+                    Thread.Sleep(5000);
+
                 }
-            }
+            }, cancellation.Token);
         }
 
+        private void NotificarNuevoPedido()
+        {
+            if (OnPedido != null)
+            {
+                menu = new T();
 
+                menu.IniciarPreparacion();
 
+                OnPedido.Invoke(menu);
+            }
+        }
     }
+
+
+
 }
+
