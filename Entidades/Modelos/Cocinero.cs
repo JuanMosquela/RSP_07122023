@@ -18,6 +18,9 @@ namespace Entidades.Modelos
         private CancellationTokenSource cancellation;
         private Task tarea;
         private T menu;
+        private Mozo<T> mozo;
+        private T pedidoEnPreparacion;
+        private Queue<T> pedidos;
 
         public event DelegadoNuevoIngreso  OnIngreso;
         public event DelegadoDemoraAtencion OnDemora;
@@ -25,7 +28,13 @@ namespace Entidades.Modelos
         public Cocinero(string nombre)
         {
             this.nombre = nombre;
+            this.mozo = new Mozo<T>();
+            this.pedidos = new Queue<T>();
+
+            
         }
+
+        public Queue<T> Pedidos { get { return pedidos; } }
 
         //No hacer nada
         public bool HabilitarCocina
@@ -57,13 +66,14 @@ namespace Entidades.Modelos
 
         private void IniciarIngreso()
         {
-            this.tarea = Task.Run(() =>
+            tarea = Task.Run(() =>
             {
                 while (!cancellation.IsCancellationRequested)
                 {
                     NotificarNuevoIngreso();
                     EsperarProximoIngreso();
                     cantPedidosFinalizados++;
+                    FileManager.Guardar("ingresa", "entra.txt", true);
                     DataBaseManager.GuardarTicket<T>(nombre, menu);
 
                 }
@@ -74,8 +84,8 @@ namespace Entidades.Modelos
         {
             if(OnIngreso != null)
             {
-                this.menu = new T();
-                this.menu.IniciarPreparacion();
+                menu = new T();
+                menu.IniciarPreparacion();
                 OnIngreso.Invoke(menu);                            
             }                  
         }

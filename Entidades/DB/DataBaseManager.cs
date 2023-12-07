@@ -47,7 +47,7 @@ namespace Entidades.DataBase
             {
                 using (DataBaseManager.connection = new SqlConnection(DataBaseManager.stringConnection))
                 {
-                    string query = $"INSERT INTO TICKET (empleado, ticket) VALUES (@empleado,@ticket)";
+                    string query = $"INSERT INTO TICKETS (empleado, ticket) VALUES (@empleado,@ticket)";
                     SqlCommand command = new SqlCommand(query, connection);
                     command.CommandType = System.Data.CommandType.Text;
                     command.CommandText = query;
@@ -55,8 +55,7 @@ namespace Entidades.DataBase
                     command.Parameters.AddWithValue("@ticket", comida.Ticket);
                     connection.Open();
 
-                    command.ExecuteNonQuery();
-                 
+                    command.ExecuteNonQuery();                 
 
                     return true;                    
                 }

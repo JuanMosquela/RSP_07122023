@@ -25,9 +25,18 @@ namespace FrmView
         //en el formulario los datos de la comida
         private void MostrarComida(IComestible comida)
         {
-            this.comidas.Enqueue(comida);
-            this.pcbComida.Load(comida.Imagen);
-            this.rchElaborando.Text = comida.ToString();
+
+            if (this.InvokeRequired)
+            {          
+                this.Invoke(new Action(() => MostrarComida(comida)));
+            }
+            else
+            {
+                this.comidas.Enqueue(comida);
+                this.pcbComida.Load(comida.Imagen);
+                this.rchElaborando.Text = comida.ToString();
+            }
+
         }
 
         //Alumno: Realizar los cambios necesarios sobre MostrarConteo de manera que se refleje
@@ -83,7 +92,7 @@ namespace FrmView
         private void FrmView_FormClosing(object sender, FormClosingEventArgs e)
         {
             //Alumno: Serializar el cocinero antes de cerrar el formulario
-            FileManager.Serializar(hamburguesero, "file.txt");
+            FileManager.Serializar<Cocinero<Hamburguesa>>(hamburguesero, "HamburgueseroSerializado.txt");
 
         }
     }

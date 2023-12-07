@@ -36,7 +36,7 @@ namespace Entidades.Modelos
 
         private void AgregarIngredientes()
         {            
-            this.ingredientes = random.IngredientesAleatorios();
+            ingredientes = random.IngredientesAleatorios();
         } 
 
         private string MostrarDatos()
@@ -53,7 +53,7 @@ namespace Entidades.Modelos
         public void FinalizarPreparacion(string cocinero)
         {
             this.costo = this.ingredientes.CalcularCostoIngredientes(Hamburguesa.costoBase);
-            this.estado = !this.Estado;
+            this.estado = true;
         }
 
         public void IniciarPreparacion()
